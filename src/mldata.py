@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import numpy as np
 #This file uses NaturalDisasters1900-2025WithCoords.csv data and 
 #reduces the data used by the machine learning algorithm
 def remove_unwanted_cols(fileName):
@@ -29,8 +30,23 @@ def remove_unwanted_cols(fileName):
     fileName = fileName.drop(columns=["Admin Units"])
     fileName = fileName.drop(columns=["Last Update"])
     fileName = fileName.drop(columns=["Entry Date"])
+    fileName = fileName.drop(columns=["Disaster Group"])
+    fileName = fileName.drop(columns=["ISO"])
+    fileName = fileName.drop(columns=["Country"])
+    fileName = fileName.drop(columns=["Subregion"])
+    fileName = fileName.drop(columns=["Region"])
+    fileName = fileName.drop(columns=["Location"])
+    fileName = fileName.drop(columns=["Origin"])
+    fileName = fileName.drop(columns=["Magnitude Scale"])
+    fileName = fileName.drop(columns=["Start Month"])
+    fileName = fileName.drop(columns=["Start Day"])
+    fileName = fileName.drop(columns=["End Day"])
     fileName = fileName.drop(columns=["Origin"])
     return fileName
+
+#def remove_unwanted_rows(df):
+#    df['Magnitude'] = np.clip(df['Magnitude'], 0, 10)
+#    return df
 
 
 inputFilePath = "../data/NaturalDisasters1900-2025WithCoords.csv"
@@ -44,6 +60,7 @@ df = pd.read_csv(inputFilePath)
 
 naturalDisastersOnly = df[df["Disaster Group"]== "Natural"]
 naturalDisastersOnly = remove_unwanted_cols(naturalDisastersOnly)
+naturalDisastersOnly = remove_unwanted_rows(df)
 
 #the ml algorithm target is magnitude so every row with an empty Magnitude
 #column has to be eliminated:
@@ -58,6 +75,11 @@ earthquakesOnlyFP = "../data/earthquakesOnlyFP.csv"
 earthquakesOnly = ofp[ofp["Disaster Type"]=="Earthquake"]
 earthquakesOnly.to_csv(earthquakesOnlyFP, index=False)
 
+#Flood 
+
+floodsOnlyFP = "../data/floodsOnlyFP.csv"
+floodsOnly = ofp[ofp["Disaster Type"]=="Flood"]
+floodsOnly.to_csv(floodsOnlyFP, index=False)
 
 
 

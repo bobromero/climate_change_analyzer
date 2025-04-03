@@ -4,32 +4,36 @@ from sklearn.metrics import mean_squared_error
 import pandas as pd
 import numpy as np
 
-#df = pd.read_csv("earthquakesOnlyFP.csv")
-earthquakesOnlyFP = "../data/earthquakesOnlyFP.csv"
-df = pd.read_csv(earthquakesOnlyFP)
+
+
+floodsOnlyFP = "../data/floodsOnlyFP.csv"
+df = pd.read_csv(floodsOnlyFP)
 
 df = df.dropna(axis=1, how='all')
 
-features = ['Start Year', 'Start Month', 'Latitude', 'Longitude']
-target = 'Magnitude'
 
-df = df.dropna(subset=['Magnitude'])  
+features = ['Start Year', 'Latitude', 'Longitude', 'Magnitude']
+targets = ['Start Year', 'Latitude', 'Longitude', 'Magnitude']
 
-df = df[~df['Magnitude'].isin([np.inf, -np.inf])] 
-
+df = df.dropna(subset=features)
+df = df[~df[features].isin([np.inf, -np.inf]).any(axis=1)]
 df['Magnitude'] = np.clip(df['Magnitude'], 0, 10)
 
-X_train, X_test, y_train, y_test = train_test_split(df[features], df[target], test_size=0.2, random_state=42)
+X_train, X_test = train_test_split(df[features], test_size=0.2, random_state=42)
 
-model = xgb.XGBRegressor(n_estimators=400, learning_rate=0.03)
+models = {}
+for target in targets:
+    y_train = df.loc[X_train.index, target]
+    y_test = df.loc[X_test.index, target]
 
-model.fit(X_train, y_train)
+    model = xgb.XGBRegressor(n_estimators=400, learning_rate=0.03)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    mse = mean_squared_error(y_test, y_pred)
+    print(f"MSE for {target}: {mse}")
 
-y_pred = model.predict(X_test)
+    models[target] = model
 
-mse = mean_squared_error(y_test, y_pred)
-
-print(f'Mean Squared Error: {mse}')
-
-
-
+# Export as model_bundle
+from types import SimpleNamespace
+model_bundle = SimpleNamespace(**models)
