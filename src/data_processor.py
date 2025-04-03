@@ -179,8 +179,18 @@ def updateCoords(df):
     return df
 
 
-def process_earthquakes(df):
-    pass
+def load_disaster(type, cols=None):
+    if cols is None:
+        cols = []
+    df = pd.read_csv("../data/NaturalDisasters1900-2025WithCoords.csv")
+    df = df[df["Disaster Type"] == type]
+    new_df = df[cols]
+    return new_df
+
+
+def describe_data():
+    df = pd.read_csv("../data/NaturalDisasters1900-2025WithCoords.csv")
+    print(df.describe())
 
 
 if __name__ == "__main__":

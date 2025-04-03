@@ -1,10 +1,13 @@
+from data_processor import load_disaster
 import matplotlib.pyplot as plt
 import pandas as pd
 from pred import future_df
 
 earthquakesOnlyFP = "../data/earthquakesOnlyFP.csv"
-df = pd.read_csv(earthquakesOnlyFP)
 
+df = load_disaster(
+    "Earthquake", ["Start Year", "Start Month", "Latitude", "Longitude", "Magnitude"]
+)
 plt.scatter(
     future_df["Longitude"],
     future_df["Latitude"],
