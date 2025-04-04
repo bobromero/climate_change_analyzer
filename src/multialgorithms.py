@@ -31,7 +31,7 @@ def prep(df):
    # model_bundle = SimpleNamespace(**models)
     return models
 
-def pred(df):
+def pred(df,model):
     future_years = np.arange(2025, 2035)
     future_months = np.tile(np.arange(1, 13), len(future_years))
 
@@ -49,10 +49,10 @@ def pred(df):
         'Longitude': future_longitudes,
         'Total Deaths': future_deaths
     })
-    models = prep(df)
+    #models = prep(df)
     for target in ['Latitude', 'Longitude', 'Total Deaths']:
         input_features = ['Start Year', "Start Month",'Latitude', 'Longitude', 'Total Deaths']
-        future_df[f'{target}'] = models[target].predict(future_df[input_features])
+        future_df[f'{target}'] = model[target].predict(future_df[input_features])
     
     future_df["Total Deaths"] = future_df["Total Deaths"].astype(int)
     future_df["Start Year"] = future_df["Start Year"].astype(int)
@@ -83,8 +83,8 @@ if __name__ == "__main__":
         ["Start Year", "Start Month", "Latitude", "Longitude", "Total Deaths"],
     )
     print(f"running for {disaster_type}")
-    #model = prep(df)
-    future_df = pred(df)
+    model = prep(df)
+    future_df = pred(df, model)
     
     vis(future_df, disaster_type)
     
