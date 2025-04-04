@@ -10,7 +10,7 @@ from data_processor import load_disaster
 def prep(df):
     df = df.dropna(axis=1, how='all')
     features = ['Start Year', 'Latitude', 'Longitude', 'Total Deaths']
-    targets = ['Start Year', 'Latitude', 'Longitude', 'Total Deaths']
+    targets = ['Latitude', 'Longitude', 'Total Deaths']
     df = df.dropna(subset=features)
     df = df[~df[features].isin([np.inf, -np.inf]).any(axis=1)]
     df["Total Deaths"] = np.clip(df["Total Deaths"], 0, 5000)
@@ -49,7 +49,7 @@ def pred(df):
         'Total Deaths': future_deaths
     })
     models = prep(df)
-    for target in ['Start Year', 'Latitude', 'Longitude', 'Total Deaths']:
+    for target in ['Latitude', 'Longitude', 'Total Deaths']:
         input_features = ['Start Year', 'Latitude', 'Longitude', 'Total Deaths']
         future_df[f'{target}'] = models[target].predict(future_df[input_features])
     
