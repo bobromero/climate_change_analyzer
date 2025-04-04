@@ -9,7 +9,7 @@ from data_processor import load_disaster
 
 def prep(df):
     df = df.dropna(axis=1, how='all')
-    features = ['Start Year', 'Latitude', 'Longitude', 'Total Deaths']
+    features = ['Start Year',"Start Month", 'Latitude', 'Longitude', 'Total Deaths']
     targets = ['Latitude', 'Longitude', 'Total Deaths']
     df = df.dropna(subset=features)
     df = df[~df[features].isin([np.inf, -np.inf]).any(axis=1)]
@@ -44,17 +44,19 @@ def pred(df):
 
     future_df = pd.DataFrame({
         'Start Year': np.repeat(future_years, 12),
+        "Start Month": future_months,
         'Latitude': future_latitudes,
         'Longitude': future_longitudes,
         'Total Deaths': future_deaths
     })
     models = prep(df)
     for target in ['Latitude', 'Longitude', 'Total Deaths']:
-        input_features = ['Start Year', 'Latitude', 'Longitude', 'Total Deaths']
+        input_features = ['Start Year', "Start Month",'Latitude', 'Longitude', 'Total Deaths']
         future_df[f'{target}'] = models[target].predict(future_df[input_features])
     
     future_df["Total Deaths"] = future_df["Total Deaths"].astype(int)
     future_df["Start Year"] = future_df["Start Year"].astype(int)
+    
     future_df = future_df.dropna(subset=input_features)
     return future_df
 
