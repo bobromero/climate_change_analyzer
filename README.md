@@ -82,7 +82,6 @@ To ensure that the scripts are functioning correctly, run the unit tests:
 python3 -m unittest
 ```
 
-### 6. Viewing Informational Website: 
 ### 6. Viewing Informational Website
 To view the informational website locally, follow these steps:
 
