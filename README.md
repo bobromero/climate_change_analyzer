@@ -82,6 +82,30 @@ To ensure that the scripts are functioning correctly, run the unit tests:
 python3 -m unittest
 ```
 
+### 6. Viewing Informational Website: 
+### 6. Viewing Informational Website
+To view the informational website locally, follow these steps:
+
+1. Navigate to the `frontend` directory:
+   ```bash
+   cd src/frontend/
+   ```
+
+2. Install the necessary dependencies:
+    ```bash
+    npm install
+    ```
+    If you encounter issues with the node_modules folder, you can delete it and reinstall the dependencies:
+    ``` bash
+    rm -rf node_modules/
+    npm install
+    ```
+3. Start the development server:
+    ```bash
+    npm run dev
+    ```
+4. A link will be given that you can click to view!
+
 ### Notes
 
 - Ensure all dependencies in `requirements.txt` are installed before running the scripts.
